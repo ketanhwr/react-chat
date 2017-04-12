@@ -40,6 +40,23 @@ server.listen(port, '0.0.0.0', function onStart(err) {
   console.info('==> Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.', port, port);
 });
 
+var userId = 1;
+
 io.on('connection', function(socket){
   console.log("client connected!");
+
+  socket.on('user:request', function(msg) {
+    socket.emit('user:join', { id: userId });
+    userId++;
+  });
+
+  socket.on('send:message', function(msg) {
+    io.emit('send:message', msg);
+  });
+
+  socket.on('user:left', function(msg) {
+    console.log("client disconnected!");
+    socket.broadcast.emit('user:left', msg);
+  })
+
 });
