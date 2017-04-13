@@ -41,22 +41,43 @@ server.listen(port, '0.0.0.0', function onStart(err) {
 });
 
 var userId = 1;
+var userCount = 0;
+
+getDate = function() {
+
+  var date = new Date();
+
+  var hour = date.getHours();
+  hour = (hour < 10 ? "0" : "") + hour;
+
+  var min  = date.getMinutes();
+  min = (min < 10 ? "0" : "") + min;
+
+  return hour + ":" + min;
+}
 
 io.on('connection', function(socket){
+
   console.log("client connected!");
 
   socket.on('user:request', function(msg) {
-    socket.emit('user:join', { id: userId });
+    userCount++;
+    socket.emit('user:accept', { id : userId, users : userCount });
     userId++;
+    socket.broadcast.emit('user:join');
+    console.log("User Count : " + userCount);
   });
 
   socket.on('send:message', function(msg) {
+    msg.time = getDate();
     io.emit('send:message', msg);
   });
 
-  socket.on('user:left', function(msg) {
+  socket.on('disconnect', function(msg) {
     console.log("client disconnected!");
     socket.broadcast.emit('user:left', msg);
+    userCount--;
+    console.log("User Count : " + userCount);
   })
 
 });

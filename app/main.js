@@ -17,6 +17,7 @@ class MessageForm extends Component {
   submit(e) {
     e.preventDefault();
     var message = {
+      type : 'message',
       text : this.state.text,
       time : 0
     }
@@ -61,8 +62,8 @@ class StatusBox extends Component {
     return (
 
       <div className={styles.statusBox}>
-        someone {this.props.type} <br/>
-        {this.props.text}
+        {this.props.status} <br/>
+        {this.props.count}
       </div>
 
     );
@@ -74,7 +75,14 @@ class MessageList extends Component {
 	render() {
 
     const listItems = this.props.messagelist.map((message, i) => 
-        <MessageBox key={i} text={message.text} time={message.time} />
+          {
+            if(message.type == 'message') return (
+              <MessageBox key={i} text={message.text} time={message.time} />
+            );
+            else return (
+              <StatusBox key={i} status={message.status} count={message.count} />
+            );
+          }
       );
 
 		return (
@@ -91,13 +99,17 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {messages:[{'text':'hello', 'time':'0'}], userid: -1, users: 0};
+    this.state = {messages : [], userid : 0, users : 0};
+
+    this.userAccept = this.userAccept.bind(this);
     this.userJoin = this.userJoin.bind(this);
     this.userLeft = this.userLeft.bind(this);
     this.messageReceive = this.messageReceive.bind(this);
   }
 
   componentDidMount() {
+    socket.emit('user:request');
+    socket.on('user:accept', this.userAccept);
     socket.on('user:join', this.userJoin);
     socket.on('user:left', this.userLeft);
     socket.on('send:message', this.messageReceive);
@@ -107,15 +119,29 @@ class App extends Component {
     socket.emit('user:left');
   }
 
-  userJoin(msg) {
-    this.state.users++;
-    if (this.state.userid == -1) {
-      this.setState({ userid: msg.userid });
-    }
+  userAccept(msg) {
+    this.setState({ userid : msg.id });
+    this.setState({ users : msg.users });
+
+    var newMessages = this.state.messages;
+    newMessages.push( { 'type' : 'status', 'status' : 'You joined', 'count' : msg.users} );
+    this.setState( {messages : newMessages} );
+  }
+
+  userJoin() {
+    this.setState((prevState, props) => ({ users: prevState.users + 1 }));
+
+    var newMessages = this.state.messages;
+    newMessages.push( { 'type' : 'status', 'status' : 'Someone joined', 'count' : this.state.users} );
+    this.setState( {messages : newMessages} );
   }
 
   userLeft() {
-    this.state.users--;
+    this.setState((prevState, props) => ({ users: prevState.users - 1 }));
+
+    var newMessages = this.state.messages;
+    newMessages.push( { 'type' : 'status', 'status' : 'Someone left', 'count' : this.state.users} );
+    this.setState( {messages : newMessages} );
   }
 
   messageReceive(msg) {
