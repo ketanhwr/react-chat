@@ -177,6 +177,7 @@ class App extends Component {
     var newMessages = this.state.messages;
     newMessages.push(msg);
     this.setState( {messages : newMessages} );
+    window.scrollTo(0, document.body.scrollHeight);
 
   }
 

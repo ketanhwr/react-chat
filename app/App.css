@@ -57,6 +57,7 @@
 	position: fixed;
 	bottom: 0;
 	width: 100%;
+	background-color: white;
 }
 
 .input {
@@ -80,4 +81,8 @@
 	color: #eeeeee;
 	font-size: 1.3em;
 	border-radius: 10px;
+}
+
+.messageList {
+	margin-bottom: 100px;
 }
