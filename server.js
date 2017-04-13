@@ -5,6 +5,16 @@ const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config.js');
 
+var fs = require('fs');
+var util = require('util');
+var logFile = fs.createWriteStream(path.join(__dirname, 'log/app.log'), { flags: 'a' });
+var logStdout = process.stdout;
+
+fileLog = function () {
+  logFile.write(util.format.apply(null, arguments) + '\n');
+  logStdout.write(util.format.apply(null, arguments) + '\n');
+}
+
 const port = 3000;
 const app = express();
 
@@ -63,19 +73,19 @@ io.on('connection', function(socket){
     socket.emit('user:accept', { id : userId, users : userCount });
     userId++;
     socket.broadcast.emit('user:join');
-    console.log("someone joined");
+    fileLog("someone joined");
   });
 
   socket.on('send:message', function(msg) {
     msg.time = getDate();
     io.emit('send:message', msg);
-    console.log(msg);
+    fileLog(msg.time + " => " + msg.text);
   });
 
   socket.on('disconnect', function(msg) {
     socket.broadcast.emit('user:left', msg);
     userCount--;
-    console.log("someone left");
+    fileLog("someone left");
   })
 
 });
