@@ -7,9 +7,53 @@
 }
 
 .messageText {
-	border: 1px solid black;
+	display: inline-block;
+	max-width: 80%;
+	word-wrap: break-word;
+	background-color: #dddddd;
+	padding: 5px 5px 5px 5px;
+	font-size: 1.3em;
+	border-radius: 5px;
+	margin-top: 10px;
+	box-shadow: 1px 1px 1px #888888;
 }
 
 .messageTime {
+	color: grey;
+	margin-bottom: 5px;
+	margin-top: 3px;
+}
 
+.statusBox {
+	text-align: center;
+	color: grey;
+	font-family: 'Lato', sans-serif;
+	font-size: 1.5em;
+	font-weight: 200;
+	margin-top: 10px;
+}
+
+.form {
+	margin: 0; padding: 0; box-sizing: border-box;
+	padding: 3px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	border: 1px solid black;
+}
+
+.input {
+	margin: 0; padding: 0; box-sizing: border-box;
+	border: 0;
+	padding: 10px;
+	width: 90%;
+	margin-right: .5%;
+}
+
+.button {
+	margin: 0; padding: 0; box-sizing: border-box;
+	width: 9%;
+	background: rgb(130, 224, 255);
+	border: none;
+	padding: 10px;
 }

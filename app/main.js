@@ -16,13 +16,16 @@ class MessageForm extends Component {
 
   submit(e) {
     e.preventDefault();
-    var message = {
-      type : 'message',
-      text : this.state.text,
-      time : 0
+
+    if(this.state.text != '') {
+      var message = {
+        type : 'message',
+        text : this.state.text,
+        time : 0
+      }
+      this.props.onMessageSubmit(message);  
+      this.setState({ text: '' });
     }
-    this.props.onMessageSubmit(message);  
-    this.setState({ text: '' });
   }
 
   change(e) {
@@ -32,9 +35,9 @@ class MessageForm extends Component {
   render() {
 
     return (
-      <form onSubmit={this.submit}>
-        <input onChange={this.change} value={this.state.text} />
-        <input type="submit" value="send" />
+      <form onSubmit={this.submit} className={styles.form} >
+        <input onChange={this.change} value={this.state.text} className={styles.input} />
+        <input type="submit" value="send" className={styles.button} />
       </form>
     );
   }
@@ -48,6 +51,7 @@ class MessageBox extends Component {
 
       <div className={styles.messageBox}>
         <div className={styles.messageText}> {this.props.text} </div>
+        <br/>
         <div className={styles.messageTime}> {this.props.time} </div>
       </div>
 
@@ -63,7 +67,7 @@ class StatusBox extends Component {
 
       <div className={styles.statusBox}>
         {this.props.status} <br/>
-        {this.props.count}
+        there {this.props.count > 1 ? 'are' : 'is'} {this.props.count} {this.props.count > 1 ? 'participants' : 'participant'}
       </div>
 
     );
@@ -124,7 +128,7 @@ class App extends Component {
     this.setState({ users : msg.users });
 
     var newMessages = this.state.messages;
-    newMessages.push( { 'type' : 'status', 'status' : 'You joined', 'count' : msg.users} );
+    newMessages.push( { 'type' : 'status', 'status' : 'you joined', 'count' : msg.users} );
     this.setState( {messages : newMessages} );
   }
 
@@ -132,7 +136,7 @@ class App extends Component {
     this.setState((prevState, props) => ({ users: prevState.users + 1 }));
 
     var newMessages = this.state.messages;
-    newMessages.push( { 'type' : 'status', 'status' : 'Someone joined', 'count' : this.state.users} );
+    newMessages.push( { 'type' : 'status', 'status' : 'someone joined', 'count' : this.state.users} );
     this.setState( {messages : newMessages} );
   }
 
@@ -140,7 +144,7 @@ class App extends Component {
     this.setState((prevState, props) => ({ users: prevState.users - 1 }));
 
     var newMessages = this.state.messages;
-    newMessages.push( { 'type' : 'status', 'status' : 'Someone left', 'count' : this.state.users} );
+    newMessages.push( { 'type' : 'status', 'status' : 'someone left', 'count' : this.state.users} );
     this.setState( {messages : newMessages} );
   }
 
@@ -161,6 +165,7 @@ class App extends Component {
 
       <div className={styles.app}>
         <div className={styles.heading}>Chat Application!</div>
+        <hr />
         <MessageList messagelist={this.state.messages} />
         <MessageForm onMessageSubmit={this.messageSend} />
       </div>
