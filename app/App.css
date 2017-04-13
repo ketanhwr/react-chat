@@ -51,12 +51,12 @@
 }
 
 .form {
-	margin: 0; padding: 0; box-sizing: border-box;
-	padding: 3px;
+	left: 0px;
+	margin: 0; padding: 0; 
+	box-sizing: border-box;
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	border: 1px solid black;
 }
 
 .input {
@@ -64,13 +64,20 @@
 	border: 0;
 	padding: 10px;
 	width: 90%;
-	margin-right: .5%;
+	margin: 0.5%;
+	font-size: 1.3em;
+	outline: none;
+	background-color: #eeeeee;
+
 }
 
 .button {
 	margin: 0; padding: 0; box-sizing: border-box;
 	width: 9%;
-	background: rgb(130, 224, 255);
+	background: #ff4d4d;
 	border: none;
 	padding: 10px;
+	color: #eeeeee;
+	font-size: 1.3em;
+	border-radius: 10px;
 }

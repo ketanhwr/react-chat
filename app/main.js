@@ -38,7 +38,7 @@ class MessageForm extends Component {
 
     return (
       <form onSubmit={this.submit} className={styles.form} >
-        <input onChange={this.change} value={this.state.text} className={styles.input} />
+        <input onChange={this.change} value={this.state.text} className={styles.input} placeholder="Type a message" />
         <input type="submit" value="send" className={styles.button} />
       </form>
     );
