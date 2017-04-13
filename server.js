@@ -58,26 +58,24 @@ getDate = function() {
 
 io.on('connection', function(socket){
 
-  console.log("client connected!");
-
   socket.on('user:request', function(msg) {
     userCount++;
     socket.emit('user:accept', { id : userId, users : userCount });
     userId++;
     socket.broadcast.emit('user:join');
-    console.log("User Count : " + userCount);
+    console.log("someone joined");
   });
 
   socket.on('send:message', function(msg) {
     msg.time = getDate();
     io.emit('send:message', msg);
+    console.log(msg);
   });
 
   socket.on('disconnect', function(msg) {
-    console.log("client disconnected!");
     socket.broadcast.emit('user:left', msg);
     userCount--;
-    console.log("User Count : " + userCount);
+    console.log("someone left");
   })
 
 });

@@ -6,6 +6,10 @@
 	color: #525252;
 }
 
+.userMessage {
+	text-align: right;
+}
+
 .messageText {
 	display: inline-block;
 	max-width: 80%;
@@ -16,6 +20,19 @@
 	border-radius: 5px;
 	margin-top: 10px;
 	box-shadow: 1px 1px 1px #888888;
+}
+
+.userText {
+	display: inline-block;
+	max-width: 80%;
+	word-wrap: break-word;
+	background-color: #ff4d4d;
+	padding: 5px 5px 5px 5px;
+	font-size: 1.3em;
+	border-radius: 5px;
+	margin-top: 10px;
+	box-shadow: 1px 1px 1px #888888;
+	color: #eeeeee;
 }
 
 .messageTime {

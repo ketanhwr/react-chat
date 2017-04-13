@@ -21,7 +21,9 @@ class MessageForm extends Component {
       var message = {
         type : 'message',
         text : this.state.text,
-        time : 0
+        time : 0, // Set by the server
+        user : 0, // Set before sending
+        currentuser: true
       }
       this.props.onMessageSubmit(message);  
       this.setState({ text: '' });
@@ -47,15 +49,31 @@ class MessageBox extends Component {
 
   render() {
 
-    return (
+    if(this.props.currentuser == true) {
 
-      <div className={styles.messageBox}>
-        <div className={styles.messageText}> {this.props.text} </div>
-        <br/>
-        <div className={styles.messageTime}> {this.props.time} </div>
-      </div>
+      return (
 
-    );
+        <div className={styles.userMessage}>
+          <div className={styles.userText}> {this.props.text} </div>
+          <br/>
+          <div className={styles.messageTime}> {this.props.time} </div>
+        </div>
+
+      );
+
+    }
+    else {
+
+      return (
+
+        <div>
+          <div className={styles.messageText}> {this.props.text} </div>
+          <br/>
+          <div className={styles.messageTime}> {this.props.time} </div>
+        </div>
+
+      );
+    }
   }
 }
 
@@ -81,7 +99,7 @@ class MessageList extends Component {
     const listItems = this.props.messagelist.map((message, i) => 
           {
             if(message.type == 'message') return (
-              <MessageBox key={i} text={message.text} time={message.time} />
+              <MessageBox key={i} text={message.text} time={message.time} currentuser={message.currentuser} />
             );
             else return (
               <StatusBox key={i} status={message.status} count={message.count} />
@@ -109,6 +127,7 @@ class App extends Component {
     this.userJoin = this.userJoin.bind(this);
     this.userLeft = this.userLeft.bind(this);
     this.messageReceive = this.messageReceive.bind(this);
+    this.messageSend = this.messageSend.bind(this);
   }
 
   componentDidMount() {
@@ -149,6 +168,12 @@ class App extends Component {
   }
 
   messageReceive(msg) {
+    if(msg.user == this.state.userid) {
+      msg.currentuser = true;
+    }
+    else {
+      msg.currentuser = false;
+    }
     var newMessages = this.state.messages;
     newMessages.push(msg);
     this.setState( {messages : newMessages} );
@@ -156,6 +181,7 @@ class App extends Component {
   }
 
   messageSend(message) {
+    message.user = this.state.userid;
     socket.emit('send:message', message);
   }
 
@@ -164,7 +190,7 @@ class App extends Component {
     return (
 
       <div className={styles.app}>
-        <div className={styles.heading}>Chat Application!</div>
+        <div className={styles.heading}>React-Chat</div>
         <hr />
         <MessageList messagelist={this.state.messages} />
         <MessageForm onMessageSubmit={this.messageSend} />
